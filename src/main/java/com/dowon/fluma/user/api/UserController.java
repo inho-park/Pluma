@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dowon.fluma.common.dto.StatusDTO;
 import com.dowon.fluma.user.domain.Role;
 import com.dowon.fluma.user.domain.User;
+import com.dowon.fluma.user.dto.LoginDTO;
 import com.dowon.fluma.user.dto.RoleToUserDTO;
 import com.dowon.fluma.user.exception.SameNameException;
 import com.dowon.fluma.user.exception.SameUsernameException;
