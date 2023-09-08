@@ -20,7 +20,8 @@ public class Version {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Lob
+    @Column(nullable = false)
     private String content;
 
     @CreatedDate
