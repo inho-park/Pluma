@@ -11,9 +11,11 @@ import com.dowon.fluma.user.domain.User;
 import com.dowon.fluma.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.function.Function;
+
 
 @Log4j2
 @Service
@@ -32,11 +34,20 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO getDocument(Long documentId) {
-        return null;
+        Document document = documentRepository.findById(documentId).orElseThrow();
+        return entityToDTO(document, document.getUser());
     }
 
     @Override
     public PageResultDTO<DocumentDTO, Object[]> getDocuments(DocumentPageRequestDTO pageRequestDTO) {
+        Function<Object [], DocumentDTO> fn = (
+                entity -> entityToDTO(
+                        (Document) entity[0],
+                        (User) entity[1])
+                );
+        Page<Object[]> result;
+        String name = pageRequestDTO.getName();
+
         return null;
     }
 

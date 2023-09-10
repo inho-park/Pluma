@@ -28,6 +28,8 @@ public interface DocumentService {
                 .documentId(document.getId())
                 .title(document.getTitle())
                 .name(user.getName())
+                .modDate(document.getModDate())
+                .regDate(document.getRegDate())
                 .build();
     }
 }
