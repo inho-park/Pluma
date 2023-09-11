@@ -12,6 +12,7 @@ import com.dowon.fluma.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
@@ -26,7 +27,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO saveDocument(DocumentDTO documentDTO) {
-        User user = userRepository.findByName(documentDTO.getName()).orElseThrow();
+        User user = userRepository.findByUsername(documentDTO.getUsername()).orElseThrow();
         Document document = dtoToEntity(documentDTO, user);
         documentRepository.save(document);
         return entityToDTO(document, user);
@@ -46,14 +47,28 @@ public class DocumentServiceImpl implements DocumentService {
                         (User) entity[1])
                 );
         Page<Object[]> result;
-        String name = pageRequestDTO.getName();
-
-        return null;
+        String username = pageRequestDTO.getUsername();
+        if (userRepository.existsByUsername(username)) {
+            result = documentRepository.getDocumentsByUser_Username(
+                    pageRequestDTO.getPageable(Sort.by("id").descending()),
+                    username
+            );
+            return new PageResultDTO<>(result, fn);
+        } else  {
+            throw new RuntimeException("로그인 필요");
+        }
     }
 
     @Override
     public StatusDTO deleteDocument(Long documentId, String username) {
-        return null;
+        User user = userRepository.findByUsername(username).orElseThrow();
+        documentRepository.delete(
+            Document.builder()
+                    .id(documentId)
+                    .user(user)
+                    .build()
+        );
+        return StatusDTO.builder().status("success").build();
     }
 
     @Override

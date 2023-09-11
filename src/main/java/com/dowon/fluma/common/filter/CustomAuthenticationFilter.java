@@ -52,7 +52,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         return authenticationManager.authenticate(authenticationToken);
     }
 
-    // 로그인에 계속 실패할 경우 사용하기 위한 authentication 성공 메소드
+    // authentication 성공 메소드
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -81,7 +81,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
 
-        // response header 에 담으면 보안에 취약하므로 바디에 담아서 보내기
+        // response header 에 담으면 보안에 취약하므로 body에 담아서 보내기
         Map<String, String> tokens = new HashMap<>();
 //        tokens.put("granty_type", "Bearer");
         tokens.put("access_token", access_token);

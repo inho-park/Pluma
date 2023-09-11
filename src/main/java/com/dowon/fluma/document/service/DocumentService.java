@@ -15,7 +15,6 @@ public interface DocumentService {
     PageResultDTO<DocumentDTO, Object[]> getDocuments(DocumentPageRequestDTO pageRequestDTO);
     StatusDTO deleteDocument(Long documentId, String username);
     StatusDTO updateDocument(Long documentId, DocumentModifyDTO modifyDTO);
-
     default Document dtoToEntity(DocumentDTO dto, User user) {
         return Document.builder()
                 .title(dto.getTitle())
@@ -27,7 +26,7 @@ public interface DocumentService {
         return DocumentDTO.builder()
                 .documentId(document.getId())
                 .title(document.getTitle())
-                .name(user.getName())
+                .username(user.getUsername())
                 .modDate(document.getModDate())
                 .regDate(document.getRegDate())
                 .build();

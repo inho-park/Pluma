@@ -1,6 +1,7 @@
 package com.dowon.fluma.document.api;
 
 import com.dowon.fluma.document.dto.DocumentDTO;
+import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -9,12 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/documents")
 public class DocumentResource {
     private final DocumentService documentService;
+//    private final VersionService versionService;
 
     /**
      * 소설 생성하기
@@ -42,4 +46,23 @@ public class DocumentResource {
         }
     }
 
+    @GetMapping()
+    public ResponseEntity getList(@RequestBody DocumentPageRequestDTO pageRequestDTO) {
+        try {
+            return new ResponseEntity<>(documentService.getDocuments(pageRequestDTO), HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity delete(@PathVariable(value = "id") String id, @RequestBody Map<String, String> username) {
+        try {
+            return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(id), username.get("username")), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
