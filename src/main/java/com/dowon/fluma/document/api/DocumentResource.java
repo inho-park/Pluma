@@ -1,6 +1,7 @@
 package com.dowon.fluma.document.api;
 
 import com.dowon.fluma.document.dto.DocumentDTO;
+import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.service.DocumentService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class DocumentResource {
 //    private final VersionService versionService;
 
     /**
-     * 소설 생성하기
+     * 문서 생성하기
      *
      * @param dto
      * @return ResponseEntity
@@ -45,7 +46,12 @@ public class DocumentResource {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
+    /**
+     * 내 문서 리스트 불러오기
+     *
+     * @param pageRequestDTO
+     * @return pageResultDTO
+     */
     @GetMapping()
     public ResponseEntity getList(@RequestBody DocumentPageRequestDTO pageRequestDTO) {
         try {
@@ -56,6 +62,22 @@ public class DocumentResource {
         }
     }
 
+    @PutMapping(value= "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity modify(@PathVariable(value = "id") String id, @RequestBody DocumentModifyDTO dto) {
+        try {
+            return new ResponseEntity<>(documentService.updateDocument(Long.parseLong(id), dto), HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 소설 삭제하기
+     *
+     * @param id
+     * @return statusDTO
+     */
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity delete(@PathVariable(value = "id") String id, @RequestBody Map<String, String> username) {
         try {

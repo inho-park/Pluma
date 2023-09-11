@@ -73,6 +73,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public StatusDTO updateDocument(Long documentId, DocumentModifyDTO modifyDTO) {
-        return null;
+        Document document = documentRepository.findById(documentId).orElseThrow();
+        document.changeTitle(modifyDTO.getTitle());
+        documentRepository.save(document);
+        return StatusDTO.builder().status("success").build();
     }
 }

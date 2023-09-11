@@ -24,4 +24,8 @@ public class Document extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
 }
