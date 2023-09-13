@@ -53,7 +53,7 @@ public class DocumentResource {
      * @return pageResultDTO
      */
     @GetMapping()
-    public ResponseEntity getList(@RequestBody DocumentPageRequestDTO pageRequestDTO) {
+    public ResponseEntity getList(DocumentPageRequestDTO pageRequestDTO) {
         try {
             return new ResponseEntity<>(documentService.getDocuments(pageRequestDTO), HttpStatus.OK);
         }catch (Exception e) {
