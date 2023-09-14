@@ -61,7 +61,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/username")
+    @GetMapping("/info")
     public void getName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // header 에 authorization 으로 Bearer {refresh token} 받기 ( refresh token 은 쿠키로 관리 )
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -80,10 +80,11 @@ public class UserController {
                 String username = decodedJWT.getSubject();
                 // 빼낸 정보로 DB 조회하기
                 User user = userService.getUser(username);
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("username", user.getUsername());
+                Map<String, String> map = new HashMap<>();
+                map.put("userName", user.getName());
+                map.put("userId", user.getId().toString());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                new ObjectMapper().writeValue(response.getOutputStream(), map);
             }catch (Exception e) {
                 e.printStackTrace();
             }

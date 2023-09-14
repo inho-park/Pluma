@@ -3,6 +3,7 @@ package com.dowon.fluma.common.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.dowon.fluma.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
@@ -84,6 +85,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         // response header 에 담으면 보안에 취약하므로 body에 담아서 보내기
         Map<String, String> tokens = new HashMap<>();
 //        tokens.put("granty_type", "Bearer");
+
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
