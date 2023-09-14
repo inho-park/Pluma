@@ -8,11 +8,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dowon.fluma.common.dto.StatusDTO;
 import com.dowon.fluma.user.domain.Role;
 import com.dowon.fluma.user.domain.User;
-import com.dowon.fluma.user.dto.LoginDTO;
 import com.dowon.fluma.user.dto.RoleToUserDTO;
 import com.dowon.fluma.user.exception.SameNameException;
 import com.dowon.fluma.user.exception.SameUsernameException;
-import com.dowon.fluma.version.service.UserService;
+import com.dowon.fluma.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -133,7 +132,6 @@ public class UserController {
                 // response header 에 담으면 보안에 취약하므로 바디에 담아서 보내기
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);
-                tokens.put("refresh_token", refresh_token);
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             }catch (TokenExpiredException e) {

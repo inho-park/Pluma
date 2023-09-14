@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 public class DocumentDTO {
     private Long documentId;
     private String title;
-    private String username;
+    private Long userId;
     private LocalDateTime regDate,modDate;
 }

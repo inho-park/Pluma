@@ -1,4 +1,4 @@
-package com.dowon.fluma.version.service;
+package com.dowon.fluma.user.service;
 
 import com.dowon.fluma.user.domain.Role;
 import com.dowon.fluma.user.domain.User;

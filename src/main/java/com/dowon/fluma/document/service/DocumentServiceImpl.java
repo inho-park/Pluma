@@ -27,10 +27,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO saveDocument(DocumentDTO documentDTO) {
-        User user = userRepository.findByUsername(documentDTO.getUsername()).orElseThrow();
-        Document document = dtoToEntity(documentDTO, user);
-        documentRepository.save(document);
-        return entityToDTO(document, user);
+        User user = userRepository.findById(documentDTO.getUserId()).orElseThrow();
+        return entityToDTO(documentRepository.save(dtoToEntity(documentDTO, user)), user);
     }
 
     @Override
@@ -47,11 +45,11 @@ public class DocumentServiceImpl implements DocumentService {
                         (User) entity[1])
                 );
         Page<Object[]> result;
-        String username = pageRequestDTO.getUsername();
-        if (userRepository.existsByUsername(username)) {
-            result = documentRepository.getDocumentsByUser_Username(
+        Long userId = pageRequestDTO.getUserId();
+        if (userRepository.existsById(userId)) {
+            result = documentRepository.getDocumentsByUser_Id(
                     pageRequestDTO.getPageable(Sort.by("id").descending()),
-                    username
+                    userId
             );
             return new PageResultDTO<>(result, fn);
         } else  {
@@ -60,8 +58,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public StatusDTO deleteDocument(Long documentId, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+    public StatusDTO deleteDocument(Long documentId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
         documentRepository.delete(
             Document.builder()
                     .id(documentId)

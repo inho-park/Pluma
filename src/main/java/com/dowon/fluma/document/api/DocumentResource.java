@@ -4,6 +4,7 @@ import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.service.DocumentService;
+import com.dowon.fluma.version.service.VersionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/documents")
 public class DocumentResource {
     private final DocumentService documentService;
-//    private final VersionService versionService;
+    private final VersionService versionService;
 
     /**
      * 문서 생성하기
@@ -79,9 +80,10 @@ public class DocumentResource {
      * @return statusDTO
      */
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity delete(@PathVariable(value = "id") String id, @RequestBody Map<String, String> username) {
+    public ResponseEntity delete(@PathVariable(value = "id") String id, @RequestBody Map<String, Long> userId) {
         try {
-            return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(id), username.get("username")), HttpStatus.OK);
+            versionService.deleteAll(Long.parseLong(id));
+            return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(id), userId.get("userId")), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

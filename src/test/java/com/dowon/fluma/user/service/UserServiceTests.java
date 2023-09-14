@@ -2,7 +2,6 @@ package com.dowon.fluma.user.service;
 
 import com.dowon.fluma.user.domain.Role;
 import com.dowon.fluma.user.domain.User;
-import com.dowon.fluma.version.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

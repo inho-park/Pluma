@@ -13,7 +13,7 @@ public interface DocumentService {
     DocumentDTO saveDocument(DocumentDTO documentDTO);
     DocumentDTO getDocument(Long documentId);
     PageResultDTO<DocumentDTO, Object[]> getDocuments(DocumentPageRequestDTO pageRequestDTO);
-    StatusDTO deleteDocument(Long documentId, String username);
+    StatusDTO deleteDocument(Long documentId, Long userId);
     StatusDTO updateDocument(Long documentId, DocumentModifyDTO modifyDTO);
     default Document dtoToEntity(DocumentDTO dto, User user) {
         return Document.builder()
@@ -26,7 +26,7 @@ public interface DocumentService {
         return DocumentDTO.builder()
                 .documentId(document.getId())
                 .title(document.getTitle())
-                .username(user.getUsername())
+                .userId(user.getId())
                 .modDate(document.getModDate())
                 .regDate(document.getRegDate())
                 .build();

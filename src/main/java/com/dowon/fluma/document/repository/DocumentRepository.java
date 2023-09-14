@@ -12,9 +12,9 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query(
             "SELECT d, d.user " +
                     "FROM Document d " +
-                    "WHERE d.user.username=:username"
+                    "WHERE d.user.id=:userId"
     )
-    Page<Object[]> getDocumentsByUser_Username(Pageable pageable, @Param("username") String username);
+    Page<Object[]> getDocumentsByUser_Id(Pageable pageable, @Param("userId") Long userId);
 
 
 }
