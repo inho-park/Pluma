@@ -6,6 +6,7 @@ import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.document.repository.DocumentRepository;
 import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.dto.VersionDTO;
+import com.dowon.fluma.version.dto.VersionListDTO;
 import com.dowon.fluma.version.dto.VersionPageRequestDTO;
 import com.dowon.fluma.version.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 @Service
@@ -35,11 +37,12 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
-    public PageResultDTO<VersionDTO, Object[]> getVersions(VersionPageRequestDTO pageRequestDTO) {
-        Function<Object[], VersionDTO> fn = (
-                entity -> entityToDTO(
-                        (Version) entity[0],
-                        (Document) entity[1]
+    public PageResultDTO<VersionListDTO, Object[]> getVersions(VersionPageRequestDTO pageRequestDTO) {
+        Function<Object[], VersionListDTO> fn = (
+                entity -> VersionListDTO.entityToDTO(
+                        (Long) entity[0],
+                        (LocalDateTime) entity[1],
+                        (String) entity[2]
                 )
         );
         Page<Object[]> result;

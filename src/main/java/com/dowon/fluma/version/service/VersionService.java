@@ -5,12 +5,13 @@ import com.dowon.fluma.common.dto.StatusDTO;
 import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.dto.VersionDTO;
+import com.dowon.fluma.version.dto.VersionListDTO;
 import com.dowon.fluma.version.dto.VersionPageRequestDTO;
 
 public interface VersionService {
     VersionDTO saveVersion(VersionDTO versionDTO);
     VersionDTO getVersion(Long versionId);
-    PageResultDTO<VersionDTO, Object[]> getVersions(VersionPageRequestDTO pageRequestDTO);
+    PageResultDTO<VersionListDTO, Object[]> getVersions(VersionPageRequestDTO pageRequestDTO);
     StatusDTO deleteVersion(Long versionId, Long documentId);
     StatusDTO deleteAll(Long documentId);
 //    StatusDTO updateVersion(Long versionId, VersionModifyDTO modifyDTO);

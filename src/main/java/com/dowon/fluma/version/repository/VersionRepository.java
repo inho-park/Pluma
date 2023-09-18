@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface VersionRepository extends JpaRepository<Version, Long> {
     @Query(
-            "SELECT v, v.document " +
+            "SELECT v.id, v.createdAt, v.subtitle " +
                     "FROM Version v " +
                     "WHERE v.document.id=:documentId"
     )
