@@ -7,8 +7,8 @@ import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.repository.DocumentRepository;
-import com.dowon.fluma.user.domain.User;
-import com.dowon.fluma.user.repository.UserRepository;
+import com.dowon.fluma.user.domain.Member;
+import com.dowon.fluma.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -22,12 +22,12 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class DocumentServiceImpl implements DocumentService {
-    private final UserRepository userRepository;
+    private final MemberRepository userRepository;
     private final DocumentRepository documentRepository;
 
     @Override
     public DocumentDTO saveDocument(DocumentDTO documentDTO) {
-        User user = userRepository.findById(documentDTO.getUserId()).orElseThrow();
+        Member user = userRepository.findById(documentDTO.getUserId()).orElseThrow();
         return entityToDTO(documentRepository.save(dtoToEntity(documentDTO, user)), user);
     }
 
@@ -42,7 +42,7 @@ public class DocumentServiceImpl implements DocumentService {
         Function<Object [], DocumentDTO> fn = (
                 entity -> entityToDTO(
                         (Document) entity[0],
-                        (User) entity[1])
+                        (Member) entity[1])
                 );
         Page<Object[]> result;
         Long userId = pageRequestDTO.getUserId();
@@ -59,7 +59,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public StatusDTO deleteDocument(Long documentId, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
+        Member user = userRepository.findById(userId).orElseThrow();
         documentRepository.delete(
             Document.builder()
                     .id(documentId)

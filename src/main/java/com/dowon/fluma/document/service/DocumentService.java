@@ -7,7 +7,8 @@ import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
-import com.dowon.fluma.user.domain.User;
+import com.dowon.fluma.user.domain.Member;
+
 
 public interface DocumentService {
     DocumentDTO saveDocument(DocumentDTO documentDTO);
@@ -15,14 +16,14 @@ public interface DocumentService {
     PageResultDTO<DocumentDTO, Object[]> getDocuments(DocumentPageRequestDTO pageRequestDTO);
     StatusDTO deleteDocument(Long documentId, Long userId);
     StatusDTO updateDocument(Long documentId, DocumentModifyDTO modifyDTO);
-    default Document dtoToEntity(DocumentDTO dto, User user) {
+    default Document dtoToEntity(DocumentDTO dto, Member user) {
         return Document.builder()
                 .title(dto.getTitle())
                 .user(user)
                 .build();
     }
 
-    default DocumentDTO entityToDTO(Document document, User user) {
+    default DocumentDTO entityToDTO(Document document, Member user) {
         return DocumentDTO.builder()
                 .documentId(document.getId())
                 .title(document.getTitle())

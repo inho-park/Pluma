@@ -2,8 +2,8 @@ package com.dowon.fluma.document.repo;
 
 import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.document.repository.DocumentRepository;
-import com.dowon.fluma.user.domain.User;
-import com.dowon.fluma.user.repository.UserRepository;
+import com.dowon.fluma.user.domain.Member;
+import com.dowon.fluma.user.repository.MemberRepository;
 import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.repository.VersionRepository;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class DocumentRepositoryTests {
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository userRepository;
     @Autowired
     private DocumentRepository documentRepository;
     @Autowired
@@ -24,7 +24,7 @@ public class DocumentRepositoryTests {
      */
     @Test
     public void 문서_생성() {
-        User user;
+        Member user;
         for (int i = 1; i < 11; i++) {
             user = userRepository.findByUsername("username" + i).orElseThrow();
             for (int j = 1; j < 11; j++) {

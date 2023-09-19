@@ -1,7 +1,7 @@
 package com.dowon.fluma.document.domain;
 
 import com.dowon.fluma.common.domain.BaseTimeEntity;
-import com.dowon.fluma.user.domain.User;
+import com.dowon.fluma.user.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class Document extends BaseTimeEntity {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Member user;
 
     public void changeTitle(String title) {
         this.title = title;
