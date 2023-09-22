@@ -25,6 +25,7 @@ public class Image {
 //1. 한 번 저장된 버전은 수정 불가능, 삭제 가능
 //2. 즉 한 번 저장된 이미지는 수정 필요 X, 삭제 필요 O
 //3. 이미지가 삭제되는 순간은 해당 버전이 삭제되는 순간 혹은 문서 자체가 삭제되는 순간
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,6 +33,11 @@ public class Image {
     @Column(length = 100, unique = true, nullable = false)
     private String filename;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinTable(name = "image_versions",
+            joinColumns = @JoinColumn(name = "image_id"),
+            inverseJoinColumns = @JoinColumn(name = "version_id"))
     private List<Version> versions = new ArrayList<>();
+
+
 }
