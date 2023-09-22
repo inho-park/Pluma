@@ -32,12 +32,4 @@ public class Image {
 
     @Column(length = 100, unique = true, nullable = false)
     private String filename;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "image_versions",
-            joinColumns = @JoinColumn(name = "image_id"),
-            inverseJoinColumns = @JoinColumn(name = "version_id"))
-    private List<Version> versions = new ArrayList<>();
-
-
 }

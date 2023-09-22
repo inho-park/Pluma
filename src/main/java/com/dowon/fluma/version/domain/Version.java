@@ -2,10 +2,7 @@ package com.dowon.fluma.version.domain;
 
 import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.image.domain.Image;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -36,9 +33,13 @@ public class Version {
     @Column(updatable = false, name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Document document;
 
-
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinTable(name = "version_images",
+            joinColumns = @JoinColumn(name = "version_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
+    private List<Image> images = new ArrayList<>();
 }
 

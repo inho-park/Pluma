@@ -57,13 +57,20 @@ public class VersionServiceImpl implements VersionService {
 
     @Override
     public StatusDTO deleteVersion(Long versionId, Long documentId) {
-
-        return null;
+        Document document = documentRepository.findById(documentId).orElseThrow();
+        versionRepository.delete(
+                Version.builder()
+                        .id(versionId)
+                        .document(document)
+                        .build()
+        );
+        return StatusDTO.builder().status("success").build();
     }
 
     @Override
     public StatusDTO deleteAll(Long documentId) {
-        return null;
+        versionRepository.deleteAllByDocument_Id(documentId);
+        return StatusDTO.builder().status("success").build();
     }
 
 //    @Override

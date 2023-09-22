@@ -30,23 +30,14 @@ public class ImageRepositoryTests {
     @Test
     public void 이미지_버전_연결() {
         for (int i = 1; i < 11; i++) {
-            Image image = imageRepository.findById((long) i).orElseThrow();
-            System.out.println("image" + i +" : " + image.getFilename());
+            Version version = versionRepository.findById((long) i).orElseThrow();
             for (int j = 1; j < 10; j++) {
                 if (i == j) continue;
                 else {
-                    Version version = versionRepository.findById((long) j).orElseThrow();
-                    image.getVersions().add(version);
+                    version.getImages().add(imageRepository.findById((long) j).orElseThrow());
                 }
             }
-            imageRepository.save(image);
-        }
-
-        for (int i = 11; i < 21; i++) {
-            Image image = imageRepository.findById((long)i - 10).orElseThrow();
-            Version version = versionRepository.findById((long) i).orElseThrow();
-            image.getVersions().add(version);
-            imageRepository.save(image);
+            versionRepository.save(version);
         }
     }
 }
