@@ -4,6 +4,7 @@ import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.service.DocumentService;
+import com.dowon.fluma.image.service.ImageService;
 import com.dowon.fluma.version.service.VersionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class DocumentResource {
     private final DocumentService documentService;
     private final VersionService versionService;
+    private final ImageService imageService;
 
     /**
      * 문서 생성하기
@@ -83,6 +85,7 @@ public class DocumentResource {
     public ResponseEntity delete(@PathVariable(value = "id") String id, @RequestBody Map<String, Long> userId) {
         try {
             versionService.deleteAll(Long.parseLong(id));
+            imageService.deleteImageByDocument(Long.parseLong(id));
             return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(id), userId.get("userId")), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

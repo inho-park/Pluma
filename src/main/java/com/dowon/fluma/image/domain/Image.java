@@ -1,5 +1,6 @@
 package com.dowon.fluma.image.domain;
 
+import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.version.domain.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +33,11 @@ public class Image {
 
     @Column(length = 100, unique = true, nullable = false)
     private String filename;
-}
+
+    @ManyToMany(mappedBy = "images")
+    private List<Version> versions = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Document document;
+
+    }
