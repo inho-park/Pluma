@@ -81,12 +81,12 @@ public class DocumentResource {
      * @param id
      * @return statusDTO
      */
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity delete(@PathVariable(value = "id") String id, @RequestBody Map<String, Long> userId) {
+    @DeleteMapping(value = "/{userId}+{documentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity delete(@PathVariable(value = "userId") String userId, @PathVariable(value = "documentId") String documentId) {
         try {
-            versionService.deleteAll(Long.parseLong(id));
-            imageService.deleteImageByDocument(Long.parseLong(id));
-            return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(id), userId.get("userId")), HttpStatus.OK);
+            versionService.deleteAll(Long.parseLong(documentId));
+            imageService.deleteImageByDocument(Long.parseLong(documentId));
+            return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(documentId), Long.parseLong(userId)), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

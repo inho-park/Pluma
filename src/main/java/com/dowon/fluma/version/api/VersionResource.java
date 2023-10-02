@@ -57,11 +57,12 @@ public class VersionResource {
         }
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity remove(@PathVariable(value = "id") String versionId,@RequestBody Map<String, Long> map) {
+    @DeleteMapping(value = "/{documentId}+{versionId}")
+    public ResponseEntity remove(@PathVariable(value = "documentId") String documentId,
+                                 @PathVariable(value = "versionId") String versionId) {
         try {
-            versionService.deleteVersion(Long.parseLong(versionId), map.get("documentId"));
-            return new ResponseEntity<>(imageService.deleteImageByVersion(map.get("documentId"), Long.parseLong(versionId)), HttpStatus.OK);
+            versionService.deleteVersion(Long.parseLong(versionId), Long.parseLong(documentId));
+            return new ResponseEntity<>(imageService.deleteImageByVersion(Long.parseLong(documentId), Long.parseLong(versionId)), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
