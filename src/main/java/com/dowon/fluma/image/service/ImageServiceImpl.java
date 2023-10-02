@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     final private ImageRepository imageRepository;
+    final private S3Uploader s3Uploader;
 
     @Override
     public String deleteImageByDocument(Long documentId) {
@@ -51,7 +52,7 @@ public class ImageServiceImpl implements ImageService {
         byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
         try {
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-            ImageIO.write(image, "jpg", new File(target));
+            ImageIO.write(image, "png", new File(target));
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
