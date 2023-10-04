@@ -11,8 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +40,7 @@ public class VersionResource {
         }
     }
     /**
-     * 내 문서 리스트 불러오기
+     * 해당 문서의 버전 리스트 불러오기
      *
      * @param pageRequestDTO
      * @return pageResultDTO
@@ -57,6 +55,13 @@ public class VersionResource {
         }
     }
 
+    /**
+     * 버전 삭제하기
+     * 
+     * @param documentId
+     * @param versionId
+     * @return
+     */
     @DeleteMapping(value = "/{documentId}+{versionId}")
     public ResponseEntity remove(@PathVariable(value = "documentId") String documentId,
                                  @PathVariable(value = "versionId") String versionId) {

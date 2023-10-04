@@ -78,10 +78,11 @@ public class DocumentResource {
     /**
      * 소설 삭제하기
      *
-     * @param id
+     * @param userId
+     * @param documentId
      * @return statusDTO
      */
-    @DeleteMapping(value = "/{userId}+{documentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{userId}+{documentId}")
     public ResponseEntity delete(@PathVariable(value = "userId") String userId, @PathVariable(value = "documentId") String documentId) {
         try {
             versionService.deleteAll(Long.parseLong(documentId));
