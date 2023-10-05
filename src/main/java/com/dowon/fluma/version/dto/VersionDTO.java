@@ -6,11 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class VersionDTO {
     private Long versionId;
@@ -19,4 +19,8 @@ public class VersionDTO {
     private LocalDateTime createdAt;
     private Long documentId;
     private List<String> filePaths;
+
+    public VersionDTO() {
+        filePaths = new ArrayList<>();
+    }
 }
