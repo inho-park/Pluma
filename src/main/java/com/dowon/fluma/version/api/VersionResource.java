@@ -1,5 +1,6 @@
 package com.dowon.fluma.version.api;
 
+import com.dowon.fluma.common.dto.StatusDTO;
 import com.dowon.fluma.image.service.ImageService;
 import com.dowon.fluma.version.dto.VersionDTO;
 import com.dowon.fluma.version.dto.VersionPageRequestDTO;
@@ -23,7 +24,7 @@ public class VersionResource {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@RequestBody VersionDTO dto) {
         try {
-            return new ResponseEntity<>(versionService.saveVersion(dto), HttpStatus.OK);
+            return new ResponseEntity<>(imageService.linkImagesWithVersion(dto.getFilePaths(), versionService.saveVersion(dto)), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

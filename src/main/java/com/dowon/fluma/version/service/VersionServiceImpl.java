@@ -25,9 +25,9 @@ public class VersionServiceImpl implements VersionService {
     final private DocumentRepository documentRepository;
 
     @Override
-    public VersionDTO saveVersion(VersionDTO versionDTO) {
+    public Long saveVersion(VersionDTO versionDTO) {
         Document document = documentRepository.findById(versionDTO.getDocumentId()).orElseThrow();
-        return entityToDTO(versionRepository.save(dtoToEntity(versionDTO, document)), document);
+        return versionRepository.save(dtoToEntity(versionDTO, document)).getId();
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.dowon.fluma.version.dto.VersionListDTO;
 import com.dowon.fluma.version.dto.VersionPageRequestDTO;
 
 public interface VersionService {
-    VersionDTO saveVersion(VersionDTO versionDTO);
+    Long saveVersion(VersionDTO versionDTO);
     VersionDTO getVersion(Long versionId);
     PageResultDTO<VersionListDTO, Object[]> getVersions(VersionPageRequestDTO pageRequestDTO);
     StatusDTO deleteVersion(Long versionId, Long documentId);
