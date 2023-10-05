@@ -12,6 +12,7 @@ import com.dowon.fluma.version.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,8 +78,8 @@ public class ImageServiceImpl implements ImageService {
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
         addImage(fileName, documentId);
-        String imagePath = amazonS3Client.getUrl(bucket, fileName).toString(); // 접근가능한 URL 가져오기
-        return imagePath;
+//        String imagePath = amazonS3Client.getUrl(bucket, fileName).toString(); // 접근가능한 URL 가져오기
+        return fileName;
     }
 
     @Override
@@ -109,6 +110,16 @@ public class ImageServiceImpl implements ImageService {
             }
         }
         return "success";
+    }
+
+    @Override
+    @Scheduled(cron = "0 30 0 * * ?") // 0초 30분 0시 매일 매월 에 실행
+    public void deleteImageWithoutVersions() {
+        imageRepository.findAll().forEach(
+                image -> {
+                    if (image.getVersions().size() == 0) imageRepository.delete(image);
+                }
+        );
     }
 
 

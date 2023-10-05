@@ -73,8 +73,4 @@ public class VersionServiceImpl implements VersionService {
         return StatusDTO.builder().status("success").build();
     }
 
-//    @Override
-//    public StatusDTO updateVersion(Long versionId, VersionModifyDTO modifyDTO) {
-//        return null;
-//    }
 }
