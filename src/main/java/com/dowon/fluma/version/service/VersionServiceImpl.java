@@ -12,6 +12,7 @@ import com.dowon.fluma.version.dto.VersionListDTO;
 import com.dowon.fluma.version.dto.VersionPageRequestDTO;
 import com.dowon.fluma.version.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class VersionServiceImpl implements VersionService {
@@ -38,9 +40,8 @@ public class VersionServiceImpl implements VersionService {
     @Override
     public VersionDTO getVersion(Long versionId) {
         Version version = versionRepository.findById(versionId).orElseThrow();
-        List<Image> list = imageRepository.findALlByVersionsContaining(versionId);
         List<String> filePaths = new ArrayList<>();
-        list.forEach(
+        version.getImages().forEach(
                 i -> {
                     filePaths.add(i.getFilename());
                 }
