@@ -17,5 +17,5 @@ public class VersionDTO {
     private String content;
     private LocalDateTime createdAt;
     private Long documentId;
-    private String[] filePaths;
+    private String[] filePaths = {""};
 }
