@@ -24,10 +24,11 @@ public interface VersionService {
                 .build();
     }
 
-    default VersionDTO entityToDTO(Version version, Document document) {
+    default VersionDTO entityToDTO(Version version, Document document, String[] filePaths) {
         return VersionDTO.builder()
                 .subtitle(version.getSubtitle())
                 .content(version.getContent())
+                .filePaths(filePaths)
                 .createdAt(version.getCreatedAt())
                 .versionId(version.getId())
                 .documentId(document.getId())

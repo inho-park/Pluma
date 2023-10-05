@@ -4,6 +4,8 @@ import com.dowon.fluma.common.dto.PageResultDTO;
 import com.dowon.fluma.common.dto.StatusDTO;
 import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.document.repository.DocumentRepository;
+import com.dowon.fluma.image.domain.Image;
+import com.dowon.fluma.image.repo.ImageRepository;
 import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.dto.VersionDTO;
 import com.dowon.fluma.version.dto.VersionListDTO;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -22,6 +25,7 @@ import java.util.function.Function;
 public class VersionServiceImpl implements VersionService {
 
     final private VersionRepository versionRepository;
+    final private ImageRepository imageRepository;
     final private DocumentRepository documentRepository;
 
     @Override
@@ -33,7 +37,12 @@ public class VersionServiceImpl implements VersionService {
     @Override
     public VersionDTO getVersion(Long versionId) {
         Version version = versionRepository.findById(versionId).orElseThrow();
-        return entityToDTO(version, version.getDocument());
+        List<Image> list = imageRepository.findALlByVersionsContaining(versionId);
+        String filePaths[] = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            filePaths[i] = list.get(i).getFilename();
+        }
+        return entityToDTO(version, version.getDocument(), filePaths);
     }
 
     @Override

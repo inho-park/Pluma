@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dowon.fluma.document.repository.DocumentRepository;
 import com.dowon.fluma.image.domain.Image;
 import com.dowon.fluma.image.repo.ImageRepository;
+import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -100,24 +101,40 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    /**
+     * 파일 경로들을 가져와서 버전과 연결하는 함수
+     *
+     * @param fileNames
+     * @param versionId
+     * @return
+     */
     @Override
     public String linkImagesWithVersion(String[] fileNames, Long versionId) {
+        Version version = versionRepository.getReferenceById(versionId);
         for (String fileName: fileNames) {
-            if(!imageRepository.findImageByFilename(fileName).isEmpty()) {
+            if(fileName.equals("")||!imageRepository.findImageByFilename(fileName).isEmpty()) {
                 Image image = imageRepository.findImageByFilename(fileName).orElseThrow();
-                image.getVersions().add(versionRepository.getReferenceById(versionId));
+                image.getVersions().add(version);
                 imageRepository.save(image);
-            }
+            } else continue;
         }
         return "success";
     }
 
+    /**
+     * 이미지 생성과 이미지와 버전 연결 기능이 따로 구현되어 있기 때문에
+     * 버전을 저장하지 않고 이미지 등록만 하고 나갈 시 연결된 버전이 하나도 없는 이미지가 생기므로
+     * 이와 같은 상황을 해결하기 위해 스케줄러로 일정시간마다 삭제함
+     */
     @Override
-    @Scheduled(cron = "0 30 0 * * ?") // 0초 30분 0시 매일 매월 에 실행
+    @Scheduled(cron = "0 30 0 * * ?") // 0초 30분 0시 매일 매월에 실행
     public void deleteImageWithoutVersions() {
         imageRepository.findAll().forEach(
-                image -> {
-                    if (image.getVersions().size() == 0) imageRepository.delete(image);
+                i -> {
+                    if (i.getVersions().size() == 0) {
+                        deleteImageS3(i.getFilename());
+                        imageRepository.delete(i);
+                    }
                 }
         );
     }

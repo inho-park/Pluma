@@ -13,5 +13,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Transactional
     void deleteImagesByDocument_Id(Long documentId);
     List<Image> findAllByDocument_Id(Long documentId);
+    List<Image> findALlByVersionsContaining(Long versionId);
     Optional<Image> findImageByFilename(String fileName);
+
 }
