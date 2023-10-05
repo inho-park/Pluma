@@ -8,6 +8,8 @@ import com.dowon.fluma.version.dto.VersionDTO;
 import com.dowon.fluma.version.dto.VersionListDTO;
 import com.dowon.fluma.version.dto.VersionPageRequestDTO;
 
+import java.util.List;
+
 public interface VersionService {
     Long saveVersion(VersionDTO versionDTO);
     VersionDTO getVersion(Long versionId);
@@ -24,7 +26,7 @@ public interface VersionService {
                 .build();
     }
 
-    default VersionDTO entityToDTO(Version version, Document document, String[] filePaths) {
+    default VersionDTO entityToDTO(Version version, Document document, List<String> filePaths) {
         return VersionDTO.builder()
                 .subtitle(version.getSubtitle())
                 .content(version.getContent())

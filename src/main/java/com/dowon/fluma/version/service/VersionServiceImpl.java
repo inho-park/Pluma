@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -38,10 +39,12 @@ public class VersionServiceImpl implements VersionService {
     public VersionDTO getVersion(Long versionId) {
         Version version = versionRepository.findById(versionId).orElseThrow();
         List<Image> list = imageRepository.findALlByVersionsContaining(versionId);
-        String filePaths[] = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            filePaths[i] = list.get(i).getFilename();
-        }
+        List<String> filePaths = new ArrayList<>();
+        list.forEach(
+                i -> {
+                    filePaths.add(i.getFilename());
+                }
+        );
         return entityToDTO(version, version.getDocument(), filePaths);
     }
 
