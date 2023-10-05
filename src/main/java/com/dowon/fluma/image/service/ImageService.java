@@ -18,7 +18,7 @@ public interface ImageService {
 
     void deleteImageS3(String fileName);
 
-    String linkImagesWithVersion(String[] filePaths, Long versionId);
+    String linkImagesWithVersion(List<String> filePaths, Long versionId);
 
     void deleteImageWithoutVersions();
 }

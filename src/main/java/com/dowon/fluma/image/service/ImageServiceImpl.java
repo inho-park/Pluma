@@ -109,15 +109,17 @@ public class ImageServiceImpl implements ImageService {
      * @return
      */
     @Override
-    public String linkImagesWithVersion(String[] fileNames, Long versionId) {
+    public String linkImagesWithVersion(List<String> fileNames, Long versionId) {
         Version version = versionRepository.getReferenceById(versionId);
-        for (String fileName: fileNames) {
-            if(fileName.equals("")||!imageRepository.findImageByFilename(fileName).isEmpty()) {
-                Image image = imageRepository.findImageByFilename(fileName).orElseThrow();
-                image.getVersions().add(version);
-                imageRepository.save(image);
-            } else continue;
-        }
+        if (fileNames.size()!=0) fileNames.forEach(
+                i -> {
+                    if(i.equals("")||!imageRepository.findImageByFilename(i).isEmpty()) {
+                        Image image = imageRepository.findImageByFilename(i).orElseThrow();
+                        image.getVersions().add(version);
+                        imageRepository.save(image);
+                    }
+                }
+        );
         return "success";
     }
 
