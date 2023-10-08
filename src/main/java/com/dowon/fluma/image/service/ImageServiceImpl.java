@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dowon.fluma.document.repository.DocumentRepository;
 import com.dowon.fluma.image.domain.Image;
+import com.dowon.fluma.image.exception.CustomImageFormatError;
 import com.dowon.fluma.image.repo.ImageRepository;
 import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.repository.VersionRepository;
@@ -15,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -66,7 +68,21 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String addImageS3(MultipartFile multipartFile, Long documentId) throws IOException {
-        String fileName = UUID.randomUUID().toString() + multipartFile.getOriginalFilename(); // 파일 이름
+        String extension = multipartFile.getName().substring(multipartFile.getName().lastIndexOf(".") + 1);
+        String contentType = multipartFile.getContentType();
+        if (StringUtils.hasText(contentType)) {
+            if (contentType.equals("image/jpeg")) {
+                extension = "jpg";
+            } else if (contentType.equals("image/png")) {
+                extension = "png";
+            } else if (contentType.equals("image/gif")) {
+                extension = "gif";
+            } else {
+                throw new CustomImageFormatError("Not Image");
+            }
+        }
+        String fileName = UUID.randomUUID().toString() + extension; // 파일 이름
+
         long size = multipartFile.getSize(); // 파일 크기
 
         ObjectMetadata objectMetaData = new ObjectMetadata();

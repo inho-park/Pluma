@@ -1,6 +1,7 @@
 package com.dowon.fluma.image.api;
 
 
+import com.dowon.fluma.image.exception.CustomImageFormatError;
 import com.dowon.fluma.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +23,8 @@ public class ImageResource {
     public ResponseEntity upload(@PathVariable(value = "id") String documentId, MultipartFile multipartFile) throws Exception {
         try {
             return new ResponseEntity<>(imageService.addImageS3(multipartFile, Long.parseLong(documentId)), HttpStatus.OK);
+        } catch (CustomImageFormatError e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

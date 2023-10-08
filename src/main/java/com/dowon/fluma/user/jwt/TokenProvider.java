@@ -95,12 +95,17 @@ public class TokenProvider {
             throw e;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명");
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰");
+            throw e;
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰 문제 발생");
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
-        return false;
     }
 
     private Claims parseClaims(String accessToken) {
