@@ -16,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 @Log4j2
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     final private ImageRepository imageRepository;
@@ -125,18 +127,23 @@ public class ImageServiceImpl implements ImageService {
      * @return
      */
     @Override
-    public String linkImagesWithVersion(List<String> fileNames, Long versionId) {
-        Version version = versionRepository.getReferenceById(versionId);
-        if (fileNames.size()!=0) fileNames.forEach(
-                i -> {
-                    if(i.equals("")||!imageRepository.findImageByFilename(i).isEmpty()) {
-                        Image image = imageRepository.findImageByFilename(i).orElseThrow();
-                        image.getVersions().add(version);
-                        imageRepository.save(image);
+    public Long linkImagesWithVersion(List<String> fileNames, Long versionId) {
+        try {
+            Version version = versionRepository.getReferenceById(versionId);
+            if (fileNames.size()!=0) fileNames.forEach(
+                    i -> {
+                        if(i.equals("")||!imageRepository.findImageByFilename(i).isEmpty()) {
+                            Image image = imageRepository.findImageByFilename(i).orElseThrow();
+                            image.getVersions().add(version);
+                            imageRepository.save(image);
+                        }
                     }
-                }
-        );
-        return "success";
+            );
+            return versionId;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1L;
+        }
     }
 
     /**

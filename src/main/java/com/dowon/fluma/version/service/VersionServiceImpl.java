@@ -16,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.function.Function;
 
 @Log4j2
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class VersionServiceImpl implements VersionService {
 
@@ -34,14 +36,20 @@ public class VersionServiceImpl implements VersionService {
     @Override
     public Long saveVersion(VersionDTO versionDTO) {
         Document document = documentRepository.findById(versionDTO.getDocumentId()).orElseThrow();
-        return versionRepository.save(dtoToEntity(versionDTO, document)).getId();
+        List<Image> imageList = new ArrayList<>();
+        versionDTO.getFilePaths().forEach(
+                i -> {
+                    imageList.add(imageRepository.findImageByFilename(i).orElseThrow());
+                }
+        );
+        return versionRepository.save(dtoToEntity(versionDTO, document, imageList)).getId();
     }
 
     @Override
     public VersionDTO getVersion(Long versionId) {
         Version version = versionRepository.findById(versionId).orElseThrow();
         List<String> filePaths = new ArrayList<>();
-        version.getImages().forEach(
+        if (version.getImages() != null || !version.getImages().isEmpty()) version.getImages().forEach(
                 i -> {
                     filePaths.add(i.getFilename());
                 }

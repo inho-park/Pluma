@@ -3,6 +3,7 @@ package com.dowon.fluma.version.service;
 import com.dowon.fluma.common.dto.PageResultDTO;
 import com.dowon.fluma.common.dto.StatusDTO;
 import com.dowon.fluma.document.domain.Document;
+import com.dowon.fluma.image.domain.Image;
 import com.dowon.fluma.version.domain.Version;
 import com.dowon.fluma.version.dto.VersionDTO;
 import com.dowon.fluma.version.dto.VersionListDTO;
@@ -18,10 +19,11 @@ public interface VersionService {
     StatusDTO deleteAll(Long documentId);
 //    StatusDTO updateVersion(Long versionId, VersionModifyDTO modifyDTO);
 
-    default Version dtoToEntity(VersionDTO versionDTO, Document document) {
+    default Version dtoToEntity(VersionDTO versionDTO, Document document, List<Image> imageList) {
         return Version.builder()
                 .subtitle(versionDTO.getSubtitle())
                 .content(versionDTO.getContent())
+                .images(imageList)
                 .document(document)
                 .build();
     }

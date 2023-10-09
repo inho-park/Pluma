@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @Log4j2
@@ -21,10 +22,11 @@ public class VersionResource {
     final private VersionService versionService;
     final private ImageService imageService;
 
+    @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@RequestBody VersionDTO dto) {
         try {
-            return new ResponseEntity<>(imageService.linkImagesWithVersion(dto.getFilePaths(), versionService.saveVersion(dto)), HttpStatus.OK);
+            return new ResponseEntity<>(versionService.getVersion(imageService.linkImagesWithVersion(dto.getFilePaths(), versionService.saveVersion(dto))), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -34,7 +36,8 @@ public class VersionResource {
     @GetMapping(value = "/{id}")
     public ResponseEntity read(@PathVariable(value = "id") String versionId) {
         try {
-            return new ResponseEntity<>(versionService.getVersion(Long.parseLong(versionId)), HttpStatus.OK);
+            return new ResponseEntity<>(versionService.getVersion(
+                    Long.parseLong(versionId)), HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
