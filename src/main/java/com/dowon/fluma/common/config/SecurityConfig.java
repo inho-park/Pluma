@@ -1,8 +1,8 @@
 package com.dowon.fluma.common.config;
 
-import com.dowon.fluma.user.jwt.JwtAccessDeniedHandler;
-import com.dowon.fluma.user.jwt.JwtAuthenticationEntryPoint;
-import com.dowon.fluma.user.jwt.TokenProvider;
+import com.dowon.fluma.common.jwt.JwtAccessDeniedHandler;
+import com.dowon.fluma.common.jwt.JwtAuthenticationEntryPoint;
+import com.dowon.fluma.common.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

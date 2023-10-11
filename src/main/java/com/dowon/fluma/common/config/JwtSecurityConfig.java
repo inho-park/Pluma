@@ -1,7 +1,7 @@
 package com.dowon.fluma.common.config;
 
-import com.dowon.fluma.user.jwt.JwtFilter;
-import com.dowon.fluma.user.jwt.TokenProvider;
+import com.dowon.fluma.common.jwt.JwtFilter;
+import com.dowon.fluma.common.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

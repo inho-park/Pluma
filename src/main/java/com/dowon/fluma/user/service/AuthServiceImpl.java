@@ -6,7 +6,7 @@ import com.dowon.fluma.user.dto.MemberRequestDTO;
 import com.dowon.fluma.user.dto.MemberResponseDTO;
 import com.dowon.fluma.user.dto.TokenDTO;
 import com.dowon.fluma.user.dto.TokenRequestDTO;
-import com.dowon.fluma.user.jwt.TokenProvider;
+import com.dowon.fluma.common.jwt.TokenProvider;
 import com.dowon.fluma.user.repository.MemberRepository;
 import com.dowon.fluma.user.repository.RefreshTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,23 +1,23 @@
 package com.dowon.fluma.user.api;
 
-import com.dowon.fluma.user.dto.MemberRequestDTO;
-import com.dowon.fluma.user.dto.MemberResponseDTO;
-import com.dowon.fluma.user.dto.TokenDTO;
-import com.dowon.fluma.user.dto.TokenRequestDTO;
+import com.dowon.fluma.user.dto.*;
 import com.dowon.fluma.user.service.AuthService;
+import com.dowon.fluma.user.service.MemberService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthResource {
-    private final AuthService authService;
+    final private AuthService authService;
+    final private MemberService memberService;
     @PostMapping("/signup")
     public ResponseEntity<MemberResponseDTO> signup(@RequestBody MemberRequestDTO memberRequestDTO) {
         return ResponseEntity.ok(authService.signup(memberRequestDTO));
@@ -34,6 +34,25 @@ public class AuthResource {
             return ResponseEntity.ok(authService.reissue(tokenRequestDTO));
         } catch (ExpiredJwtException e) {
             return ResponseEntity.ok("Refresh 기한 만료, 로그인 필요");
+        }
+    }
+
+    @PostMapping(value = "/emails/verification")
+    public ResponseEntity sendMessage(@RequestBody EmailDTO emailDTO) {
+        try {
+            memberService.sendCodeToEmail(emailDTO.getEmail());
+            return new ResponseEntity("success", HttpStatus.OK);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity("fail", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/emails/verification")
+    public ResponseEntity verificationEmail(@RequestParam("email") String email, @RequestParam("code") String code) {
+        try {
+            return new ResponseEntity(memberService.verifiedCode(email, code), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("fail", HttpStatus.BAD_REQUEST);
         }
     }
 }

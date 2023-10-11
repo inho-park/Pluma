@@ -1,4 +1,4 @@
-package com.dowon.fluma.user.util;
+package com.dowon.fluma.common.util;
 
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;

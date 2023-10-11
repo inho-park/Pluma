@@ -1,4 +1,4 @@
-package com.dowon.fluma.user.jwt;
+package com.dowon.fluma.common.jwt;
 
 import com.dowon.fluma.user.dto.TokenDTO;
 import io.jsonwebtoken.*;

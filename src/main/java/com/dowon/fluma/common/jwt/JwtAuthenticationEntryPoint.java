@@ -1,4 +1,4 @@
-package com.dowon.fluma.user.jwt;
+package com.dowon.fluma.common.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

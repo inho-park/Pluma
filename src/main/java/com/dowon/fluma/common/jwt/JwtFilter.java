@@ -1,4 +1,4 @@
-package com.dowon.fluma.user.jwt;
+package com.dowon.fluma.common.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
