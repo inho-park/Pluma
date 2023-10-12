@@ -42,7 +42,7 @@ public class MemberServiceImpl implements MemberService{
             throw new RuntimeException("이미 등록된 이메일");
         }
         else {
-            String title = "Travel with me 이메일 인증 번호";
+            String title = "Pluma 이메일 인증 번호";
             String code = createCode();
             mailService.sendEmail(email, title, "인증 번호 : " + code);
             redisService.setValues(email, code, Duration.ofMillis(authCodeExpiration));

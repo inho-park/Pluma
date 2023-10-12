@@ -1,14 +1,13 @@
 package com.dowon.fluma.user.service;
 
+import com.dowon.fluma.common.service.RedisService;
 import com.dowon.fluma.user.domain.Member;
-import com.dowon.fluma.user.domain.RefreshToken;
 import com.dowon.fluma.user.dto.MemberRequestDTO;
 import com.dowon.fluma.user.dto.MemberResponseDTO;
 import com.dowon.fluma.user.dto.TokenDTO;
 import com.dowon.fluma.user.dto.TokenRequestDTO;
 import com.dowon.fluma.common.jwt.TokenProvider;
 import com.dowon.fluma.user.repository.MemberRepository;
-import com.dowon.fluma.user.repository.RefreshTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisService redisService;
 
     @Transactional
     public MemberResponseDTO signup(MemberRequestDTO memberRequestDTO) {
@@ -52,12 +53,13 @@ public class AuthServiceImpl implements AuthService {
         TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
 
         // 4. RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .userId(authentication.getName())
-                .value(tokenDTO.getRefreshToken())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
+        redisService.setValues("RefreshToken : " + memberRequestDTO.getUsername(), tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
+//        RefreshToken refreshToken = RefreshToken.builder()
+//                .userId(authentication.getName())
+//                .value(tokenDTO.getRefreshToken())
+//                .build();
+//
+//        refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
         return tokenDTO;
@@ -77,13 +79,12 @@ public class AuthServiceImpl implements AuthService {
 
         // 2. Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDTO.getAccessToken());
-
+        String username = memberRepository.findByName(authentication.getName()).orElseThrow().getUsername();
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+        String refreshToken = redisService.getValues("RefreshToken : " + username);
 
         // 4. Refresh Token 일치하는지 검사
-        if (!refreshToken.getValue().equals(tokenRequestDTO.getRefreshToken())) {
+        if (!refreshToken.equals(tokenRequestDTO.getRefreshToken())) {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
@@ -91,8 +92,8 @@ public class AuthServiceImpl implements AuthService {
         TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
 
         // 6. 저장소 정보 업데이트
-        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDTO.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
+        redisService.deleteValues("RefreshToken : " + username);
+        redisService.setValues("RefreshToken : " + username, tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
 
         // 토큰 발급
         return tokenDTO;

@@ -6,7 +6,6 @@ import com.dowon.fluma.user.service.MemberService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,10 +46,10 @@ public class AuthResource {
         }
     }
 
-    @GetMapping("/emails/verification")
-    public ResponseEntity verificationEmail(@RequestParam("email") String email, @RequestParam("code") String code) {
+    @PostMapping("/emails-code/verification")
+    public ResponseEntity verificationEmail(@RequestBody EmailDTO emailDTO) {
         try {
-            return new ResponseEntity(memberService.verifiedCode(email, code), HttpStatus.OK);
+            return new ResponseEntity(memberService.verifiedCode(emailDTO.getEmail(), emailDTO.getCode()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("fail", HttpStatus.BAD_REQUEST);
         }
