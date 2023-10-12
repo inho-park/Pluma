@@ -14,8 +14,8 @@ public class MemberResource {
     private final MemberService memberService;
 
     @GetMapping("/getInfo")
-    public ResponseEntity<MemberResponseDTO> findMemberInfoById() {
-        return ResponseEntity.ok().body(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()));
+    public ResponseEntity<MemberResponseDTO> findMemberInfoByToken() {
+        return ResponseEntity.ok().body(memberService.findMemberInfoByUsername(SecurityUtil.getCurrentMemberUsername()));
     }
 
     @GetMapping("/{email}")

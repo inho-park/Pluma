@@ -54,12 +54,6 @@ public class AuthServiceImpl implements AuthService {
 
         // 4. RefreshToken 저장
         redisService.setValues("RefreshToken : " + memberRequestDTO.getUsername(), tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
-//        RefreshToken refreshToken = RefreshToken.builder()
-//                .userId(authentication.getName())
-//                .value(tokenDTO.getRefreshToken())
-//                .build();
-//
-//        refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
         return tokenDTO;
@@ -79,9 +73,8 @@ public class AuthServiceImpl implements AuthService {
 
         // 2. Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDTO.getAccessToken());
-        String username = memberRepository.findByName(authentication.getName()).orElseThrow().getUsername();
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        String refreshToken = redisService.getValues("RefreshToken : " + username);
+        String refreshToken = redisService.getValues("RefreshToken : " + authentication.getName());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.equals(tokenRequestDTO.getRefreshToken())) {
@@ -92,8 +85,8 @@ public class AuthServiceImpl implements AuthService {
         TokenDTO tokenDTO = tokenProvider.generateTokenDTO(authentication);
 
         // 6. 저장소 정보 업데이트
-        redisService.deleteValues("RefreshToken : " + username);
-        redisService.setValues("RefreshToken : " + username, tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
+        redisService.deleteValues("RefreshToken : " + authentication.getName());
+        redisService.setValues("RefreshToken : " + authentication.getName(), tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
 
         // 토큰 발급
         return tokenDTO;
