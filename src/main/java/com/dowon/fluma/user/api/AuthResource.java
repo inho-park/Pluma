@@ -51,7 +51,7 @@ public class AuthResource {
         try {
             return new ResponseEntity(memberService.verifiedCode(emailDTO.getEmail(), emailDTO.getCode()), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity("fail", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
         }
     }
 }
