@@ -47,6 +47,7 @@ public class VersionServiceImpl implements VersionService {
 
     @Override
     public VersionDTO getVersion(Long versionId) {
+        // 버전과 이미지 매치때문에 에러 발생여지 있음 대처 필요
         Version version = versionRepository.findById(versionId).orElseThrow();
         List<String> filePaths = new ArrayList<>();
         if (version.getImages() != null || !version.getImages().isEmpty()) version.getImages().forEach(

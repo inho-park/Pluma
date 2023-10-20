@@ -83,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
                 throw new CustomImageFormatError("Not Image");
             }
         }
-        String fileName = UUID.randomUUID().toString() + extension; // 파일 이름
+        String fileName = UUID.randomUUID().toString() + "." + extension; // 파일 이름
 
         long size = multipartFile.getSize(); // 파일 크기
 
