@@ -11,28 +11,28 @@
 * 사용자 관리: 사용자들은 개별 계정을 생성하고 로그인하여 자신의 작품을 관리할 수 있습니다.
 
 ### 로그인 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/로그인페이지.png)
+![img.png](README_images/img.png)
 
 ### 시작 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/시작페이지.png)
+![img_3.png](README_images/img_3.png)
 
 ### 문서 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/문서페이지.png)
+![img_2.png](README_images/img_2.png)
 
 ### 문서 생성 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/문서생성페이지.png)
+![img_1.png](README_images/img_1.png)
 
 ### 버전 에디터 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/포스터_텍스트에디터.png)
+![img_7.png](README_images/img_7.png)
 
 ### 이미지 업로드
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/포스터_이미지.png)
+![img_6.png](README_images/img_6.png)
 
 ### 버전 비교 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/포스터_버전비교.png)
+![img_5.png](README_images/img_5.png)
 
 ### PDF 다운로드
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/포스터_PDF.png)
+![img_4.png](README_images/img_4.png)
 
 ### 다크모드 페이지
-![](C:/Users/inho/Desktop/3_2 캡스톤디자인/영상 및 이미지/포스터_다크모드.png)
+![img_8.png](README_images/img_8.png)
