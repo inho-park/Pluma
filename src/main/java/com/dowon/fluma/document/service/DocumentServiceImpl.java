@@ -6,6 +6,7 @@ import com.dowon.fluma.document.domain.Document;
 import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
+import com.dowon.fluma.document.exception.NoSuchDocumentException;
 import com.dowon.fluma.document.repository.DocumentRepository;
 import com.dowon.fluma.image.repo.ImageRepository;
 import com.dowon.fluma.user.domain.Member;
@@ -39,7 +40,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO getDocument(Long documentId) {
-        Document document = documentRepository.findById(documentId).orElseThrow();
+        Document document = documentRepository.findById(documentId).orElseThrow(NoSuchDocumentException::new);
         return entityToDTO(document, document.getUser());
     }
 
