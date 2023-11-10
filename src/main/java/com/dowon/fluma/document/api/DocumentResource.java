@@ -65,6 +65,13 @@ public class DocumentResource {
         }
     }
 
+    /**
+     * 내 문서 수정하기
+     *
+     * @param id
+     * @param dto
+     * @return
+     */
     @PutMapping(value= "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity modify(@PathVariable(value = "id") String id, @RequestBody DocumentModifyDTO dto) {
         try {
