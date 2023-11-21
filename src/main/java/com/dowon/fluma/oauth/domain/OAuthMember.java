@@ -1,7 +1,17 @@
 package com.dowon.fluma.oauth.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Getter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OAuthMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +24,5 @@ public class OAuthMember {
     private String name;
 
     @Column
-    @Enumerated(EnumType.STRING)
-    private OAuthProvider oAuthProvider;
+    private String provider;
 }

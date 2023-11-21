@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
-public class KAuthController {
+public class KAuthResource {
     final private KAuthService kAuthService;
     @GetMapping("/kakao")
     public void kakaoCallback(@RequestParam String code) {

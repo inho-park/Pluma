@@ -14,9 +14,9 @@ import java.net.URL;
 @Log4j2
 @Service
 public class KAuthService {
-    @Value("${KAKAO.OAUTH_KEY}")
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
-    @Value("${KAKAO.redirect_uri}")
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
     public String getToken(String code) {

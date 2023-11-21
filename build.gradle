@@ -35,6 +35,7 @@ dependencies {
 
 	// oauth code
 	implementation 'com.google.code.gson:gson:2.8.5'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	// Email, SMTP
 	implementation group: 'org.springframework', name: 'spring-context-support', version: '5.3.24'
