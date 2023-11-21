@@ -16,9 +16,9 @@ import java.net.URL;
 public class KAuthService {
     @Value("${KAKAO.OAUTH_KEY}")
     private String clientId;
-
     @Value("${KAKAO.redirect_uri}")
     private String redirectUri;
+
     public String getToken(String code) {
         String accessToken = "";
         String refreshToken = "";
@@ -85,7 +85,8 @@ public class KAuthService {
             JsonElement element = parser.parse(result);
 
             Long id = element.getAsJsonObject().get("id").getAsLong();
-            log.info("[KAUTH Service getKakaoUser] id : " + id);
+            String email = element.getAsJsonObject().get("email").getAsString();
+            log.info("[KAUTH Service getKakaoUser] id : " + id + ", email : " + email);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -28,6 +28,7 @@ public class Member {
     @Column(unique = true, nullable = false, length = 100)
     private String name;
 
+    @Column
     @Enumerated(EnumType.STRING)
     private Authority authority;
 }

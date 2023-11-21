@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.MalformedURLException;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +18,12 @@ public class KAuthController {
     final private KAuthService kAuthService;
     @GetMapping("/kakao")
     public void kakaoCallback(@RequestParam String code) {
-        String accessToken = kAuthService.getToken(code);
-        log.info("[KAUTH controller] " + accessToken);
+        try {
+            String accessToken = kAuthService.getToken(code);
+            log.info("[KAUTH controller] " + accessToken);
+            kAuthService.getKakaoUser(accessToken);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 }
