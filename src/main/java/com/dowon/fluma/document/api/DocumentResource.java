@@ -4,6 +4,7 @@ import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.service.DocumentService;
+import com.dowon.fluma.image.exception.CustomImageFormatError;
 import com.dowon.fluma.image.service.ImageService;
 import com.dowon.fluma.version.service.VersionService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -77,6 +79,18 @@ public class DocumentResource {
         try {
             return new ResponseEntity<>(documentService.updateDocument(Long.parseLong(id), dto), HttpStatus.OK);
         }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value = "/{id}/drawing", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity addDrawing(@PathVariable(value = "id") String id, MultipartFile multipartFile) throws Exception {
+        try {
+            return new ResponseEntity<>(documentService.addImageS3(Long.parseLong(id), multipartFile), HttpStatus.OK);
+        } catch (CustomImageFormatError e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

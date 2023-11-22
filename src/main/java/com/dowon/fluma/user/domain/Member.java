@@ -17,7 +17,7 @@ import java.util.Map;
 @Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member implements OAuth2User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +42,4 @@ public class Member implements OAuth2User {
     @Column
     private String providerId;
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
 }

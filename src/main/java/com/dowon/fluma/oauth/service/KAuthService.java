@@ -1,7 +1,11 @@
 package com.dowon.fluma.oauth.service;
 
+import com.dowon.fluma.user.domain.Authority;
+import com.dowon.fluma.user.domain.Member;
+import com.dowon.fluma.user.repository.MemberRepository;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,10 +14,13 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class KAuthService {
+    final private MemberRepository memberRepository;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -90,7 +97,25 @@ public class KAuthService {
             Long id = element.getAsJsonObject().get("id").getAsLong();
             String name = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
             String email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            String provider = "kakao";
+            String providerId = provider + "-" + id;
             log.info("[KAUTH Service getKakaoUser] id : " + id + ", name : " + name + ", email : " + email);
+
+            Optional<Member> optionalUser = memberRepository.findByUsername(email);
+            Member member = null;
+
+            if(optionalUser.isEmpty()) {
+                member = Member.builder()
+                        .name(name)
+                        .username(email)
+                        .provider(provider)
+                        .providerId(providerId)
+                        .authority(Authority.ROLE_USER)
+                        .build();
+                memberRepository.save(member);
+            } else {
+                member = optionalUser.get();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

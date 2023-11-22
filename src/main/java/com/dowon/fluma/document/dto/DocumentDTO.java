@@ -15,5 +15,6 @@ public class DocumentDTO {
     private Long documentId;
     private String title;
     private Long userId;
+    private String fileName;
     private LocalDateTime regDate,modDate;
 }
