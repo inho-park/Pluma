@@ -84,7 +84,15 @@ public class DocumentResource {
         }
     }
 
-    @PutMapping(value = "/{id}/drawing", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    /**
+     * 내 문서에 이미지 추가하기
+     * 
+     * @param id
+     * @param multipartFile
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/drawing/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity addDrawing(@PathVariable(value = "id") String id, MultipartFile multipartFile) throws Exception {
         try {
             return new ResponseEntity<>(documentService.addImageS3(Long.parseLong(id), multipartFile), HttpStatus.OK);

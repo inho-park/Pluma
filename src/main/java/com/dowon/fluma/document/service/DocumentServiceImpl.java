@@ -14,8 +14,6 @@ import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.exception.NoSuchDocumentException;
 import com.dowon.fluma.document.repository.DocumentRepository;
 import com.dowon.fluma.document.repository.DrawingRepository;
-import com.dowon.fluma.image.exception.CustomImageFormatError;
-import com.dowon.fluma.image.repo.ImageRepository;
 import com.dowon.fluma.user.domain.Member;
 import com.dowon.fluma.user.repository.MemberRepository;
 import com.dowon.fluma.version.repository.VersionRepository;
@@ -30,6 +28,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -56,7 +55,11 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public DocumentDTO getDocument(Long documentId) {
         Document document = documentRepository.findById(documentId).orElseThrow(NoSuchDocumentException::new);
-        return entityToDTO(document, document.getUser());
+        DocumentDTO dto = entityToDTO(document, document.getUser());
+        String fileName = "";
+        Optional<Drawing> option = drawingRepository.findByDocument_Id(documentId);
+        dto.setFileName(option.isPresent()?option.get().getFileName():"");
+        return dto;
     }
 
     @Override
@@ -73,7 +76,14 @@ public class DocumentServiceImpl implements DocumentService {
                     pageRequestDTO.getPageable(Sort.by("id").descending()),
                     userId
             );
-            return new PageResultDTO<>(result, fn);
+            PageResultDTO<DocumentDTO, Object[]> resultDTO = new PageResultDTO<>(result, fn);
+            resultDTO.getDtoList().forEach(
+                    i -> {
+                        Optional<Drawing> drawing = drawingRepository.findByDocument_Id(i.getDocumentId());
+                        drawing.ifPresent(value -> i.setFileName(value.getFileName()));
+                    }
+            );
+            return resultDTO;
         } else  {
             throw new RuntimeException("로그인 필요");
         }
