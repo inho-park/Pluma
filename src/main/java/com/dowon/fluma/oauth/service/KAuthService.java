@@ -18,6 +18,8 @@ public class KAuthService {
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String clientSecret;
 
     public String getToken(String code) {
         String accessToken = "";
@@ -30,6 +32,7 @@ public class KAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(httpURLConnection.getOutputStream()));
             String query = "grant_type=authorization_code" +
                     "&client_id=" + clientId +
+                    "&client_secret=" + clientSecret +
                     "&redirect_uri=" + redirectUri +
                     "&code=" + code;
             bw.write(query);
@@ -85,8 +88,9 @@ public class KAuthService {
             JsonElement element = parser.parse(result);
 
             Long id = element.getAsJsonObject().get("id").getAsLong();
-            String email = element.getAsJsonObject().get("email").getAsString();
-            log.info("[KAUTH Service getKakaoUser] id : " + id + ", email : " + email);
+            String name = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
+            String email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            log.info("[KAUTH Service getKakaoUser] id : " + id + ", name : " + name + ", email : " + email);
         } catch (IOException e) {
             e.printStackTrace();
         }

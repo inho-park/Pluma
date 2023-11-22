@@ -4,8 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Map;
 
 @Getter
 @Entity
@@ -13,7 +17,7 @@ import javax.persistence.*;
 @Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member implements OAuth2User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +26,7 @@ public class Member {
     @Column(unique = true, updatable = false, nullable = false, length = 100)
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(unique = true, nullable = false, length = 100)
@@ -31,4 +35,20 @@ public class Member {
     @Column
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @Column
+    private String provider;
+
+    @Column
+    private String providerId;
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return null;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
 }
