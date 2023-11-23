@@ -2,6 +2,7 @@ package com.dowon.fluma.document.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dowon.fluma.common.dto.PageResultDTO;
@@ -99,6 +100,9 @@ public class DocumentServiceImpl implements DocumentService {
     public StatusDTO deleteDocument(Long documentId, Long userId) {
         versionRepository.deleteAllByDocument_Id(documentId);
         Member user = userRepository.findById(userId).orElseThrow();
+        Drawing drawing = drawingRepository.findByDocument_Id(documentId).orElseThrow();
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket + "/drawing", drawing.getFileName()));
+        drawingRepository.deleteByDocument_Id(documentId);
         documentRepository.delete(
             Document.builder()
                     .id(documentId)

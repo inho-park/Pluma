@@ -89,7 +89,7 @@ public class DocumentResource {
      * 내 문서에 이미지 추가하기
      * 
      * @param id
-     * @param
+     * @param filePathDTO
      * @return
      * @throws Exception
      */

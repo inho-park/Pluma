@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface DrawingRepository extends JpaRepository<Drawing, Long> {
     Optional<Drawing> findByDocument_Id(Long id);
+    void deleteByDocument_Id(Long id);
 }
