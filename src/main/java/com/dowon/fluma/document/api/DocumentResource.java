@@ -3,6 +3,7 @@ package com.dowon.fluma.document.api;
 import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
+import com.dowon.fluma.document.dto.FilePathDTO;
 import com.dowon.fluma.document.service.DocumentService;
 import com.dowon.fluma.image.exception.CustomImageFormatError;
 import com.dowon.fluma.image.service.ImageService;
@@ -88,14 +89,14 @@ public class DocumentResource {
      * 내 문서에 이미지 추가하기
      * 
      * @param id
-     * @param multipartFile
+     * @param
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "/drawing/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity addDrawing(@PathVariable(value = "id") String id, MultipartFile multipartFile) throws Exception {
+    @PostMapping(value = "/drawing/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addDrawing(@PathVariable(value = "id") String id, @RequestBody FilePathDTO filePathDTO) throws Exception {
         try {
-            return new ResponseEntity<>(documentService.addImageS3(Long.parseLong(id), multipartFile), HttpStatus.OK);
+            return new ResponseEntity<>(documentService.addImageS3(Long.parseLong(id), filePathDTO.getFilePath()), HttpStatus.OK);
         } catch (CustomImageFormatError e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

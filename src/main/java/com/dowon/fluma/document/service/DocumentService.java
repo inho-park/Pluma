@@ -20,7 +20,7 @@ public interface DocumentService {
     PageResultDTO<DocumentDTO, Object[]> getDocuments(DocumentPageRequestDTO pageRequestDTO);
     StatusDTO deleteDocument(Long documentId, Long userId);
     StatusDTO updateDocument(Long documentId, DocumentModifyDTO modifyDTO);
-    String addImageS3(Long documentId, MultipartFile multipartFile) throws IOException;
+    String addImageS3(Long documentId, String filePath) throws IOException;
     public void addImage(String fileName, Long documentId);
     default Document dtoToEntity(DocumentDTO dto, Member user) {
         return Document.builder()

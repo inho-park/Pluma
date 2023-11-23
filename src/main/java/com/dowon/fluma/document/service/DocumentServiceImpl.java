@@ -27,7 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -45,6 +49,8 @@ public class DocumentServiceImpl implements DocumentService {
     final private AmazonS3Client amazonS3Client;
     @Value(value = "${cloud.aws.s3.bucket}")
     private String bucket;
+    @Value(value = "${UPLOAD_PATH}")
+    private String uploadPath;
 
     @Override
     public DocumentDTO saveDocument(DocumentDTO documentDTO) {
@@ -111,36 +117,27 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public String addImageS3(Long documentId, MultipartFile multipartFile) throws IOException {
-        String extension = null;
-        String originName = multipartFile.getName().substring(multipartFile.getName().lastIndexOf("."));
-        String contentType = multipartFile.getContentType();
-        if (StringUtils.hasText(contentType)) {
-            if (contentType.equals("image/jpeg")) {
-                extension = "jpg";
-            } else if (contentType.equals("image/png")) {
-                extension = "png";
-            } else if (contentType.equals("image/gif")) {
-                extension = "gif";
-            } else {
-                extension = multipartFile.getName().substring(multipartFile.getName().lastIndexOf(".") + 1);
-            }
-            log.info("[DocumnetService] addImageS3 extension : " + extension);
+    public String addImageS3(Long documentId, String filePath) throws IOException {
+        String extension = "png";
+        String fileName = UUID.randomUUID().toString() + "." + extension;
+        String OUTPUT_FILE_PATH = uploadPath + fileName;
+        try(InputStream in = new URL(filePath).openStream()){
+            Path imagePath = Paths.get(OUTPUT_FILE_PATH);
+            Files.copy(in, imagePath);
+            long size = Files.size(imagePath);
+            ObjectMetadata objectMetaData = new ObjectMetadata();
+            objectMetaData.setContentType(Files.probeContentType(imagePath));
+            objectMetaData.setContentLength(size);
+            // S3에 업로드
+            amazonS3Client.putObject(
+                    new PutObjectRequest(bucket + "/drawing", fileName, new FileInputStream(OUTPUT_FILE_PATH), objectMetaData)
+                            .withCannedAcl(CannedAccessControlList.PublicRead)
+            );
+            Files.delete(imagePath);
+            addImage(fileName, documentId);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        String fileName = UUID.randomUUID().toString() + "-" + originName + "." + extension; // 파일 이름
-
-        long size = multipartFile.getSize(); // 파일 크기
-
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(multipartFile.getContentType());
-        objectMetaData.setContentLength(size);
-
-        // S3에 업로드
-        amazonS3Client.putObject(
-                new PutObjectRequest(bucket + "/drawing", fileName, multipartFile.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
-        addImage(fileName, documentId);
         return fileName;
     }
 
