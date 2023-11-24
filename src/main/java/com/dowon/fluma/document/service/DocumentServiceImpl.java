@@ -25,8 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URL;
@@ -122,6 +120,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public String addImageS3(Long documentId, String filePath) throws IOException {
+        // 기존의 이미지가 있을 시 삭제 후 새로 등록
+        if (drawingRepository.existsByDocument_Id(documentId)) deleteImage(documentId);
+        
         String extension = "png";
         String fileName = UUID.randomUUID().toString() + "." + extension;
         String OUTPUT_FILE_PATH = uploadPath + fileName;
@@ -153,5 +154,12 @@ public class DocumentServiceImpl implements DocumentService {
                         .document(documentRepository.findById(documentId).orElseThrow())
                         .build()
         );
+    }
+
+    @Override
+    public void deleteImage(Long documentId) {
+        drawingRepository.deleteByDocument_Id(documentId);
+        String fileName = drawingRepository.findByDocument_Id(documentId).orElseThrow().getFileName();
+        amazonS3Client.deleteObject(bucket + "/drawing", fileName);
     }
 }

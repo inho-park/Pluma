@@ -22,6 +22,7 @@ public interface DocumentService {
     StatusDTO updateDocument(Long documentId, DocumentModifyDTO modifyDTO);
     String addImageS3(Long documentId, String filePath) throws IOException;
     public void addImage(String fileName, Long documentId);
+    public void deleteImage(Long documentId);
     default Document dtoToEntity(DocumentDTO dto, Member user) {
         return Document.builder()
                 .title(dto.getTitle())
