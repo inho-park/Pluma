@@ -1,7 +1,10 @@
 package com.dowon.fluma.oauth.service;
 
+import com.dowon.fluma.common.jwt.TokenProvider;
+import com.dowon.fluma.common.service.RedisService;
 import com.dowon.fluma.user.domain.Authority;
 import com.dowon.fluma.user.domain.Member;
+import com.dowon.fluma.user.dto.TokenDTO;
 import com.dowon.fluma.user.repository.MemberRepository;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -14,6 +17,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Optional;
 
 @Log4j2
@@ -21,6 +25,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KAuthService {
     final private MemberRepository memberRepository;
+    final private TokenProvider tokenProvider;
+    final private RedisService redisService;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -70,9 +76,9 @@ public class KAuthService {
         return accessToken;
     }
 
-    public void getKakaoUser(String accessToken) throws MalformedURLException{
+    public TokenDTO getKakaoUser(String accessToken) throws MalformedURLException{
         String requestURL = "https://kapi.kakao.com/v2/user/me";
-
+        TokenDTO tokenDTO = null;
         try {
             URL url = new URL(requestURL);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -116,8 +122,11 @@ public class KAuthService {
             } else {
                 member = optionalUser.get();
             }
+            tokenDTO = tokenProvider.getTokens(member.getName(), member.getAuthority().name());
+            redisService.setValues("RefreshToken : " + member.getUsername(), tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return tokenDTO;
     }
 }

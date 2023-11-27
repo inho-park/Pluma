@@ -32,7 +32,7 @@ public class AuthResource {
         try {
             return ResponseEntity.ok(authService.reissue(tokenRequestDTO));
         } catch (ExpiredJwtException e) {
-            return ResponseEntity.ok("Refresh 기한 만료, 로그인 필요");
+            return ResponseEntity.badRequest().body("Refresh Token Period expires");
         }
     }
 

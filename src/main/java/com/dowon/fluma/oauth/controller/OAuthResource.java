@@ -15,16 +15,17 @@ import java.net.MalformedURLException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
-public class AuthResource {
+public class OAuthResource {
     final private KAuthService kAuthService;
     @GetMapping("/kakao")
-    public void kakaoCallback(@RequestParam String code) {
+    public ResponseEntity kakaoCallback(@RequestParam String code) {
         try {
             String accessToken = kAuthService.getToken(code);
             log.info("[KAUTH controller] " + accessToken);
-            kAuthService.getKakaoUser(accessToken);
+            return ResponseEntity.ok().body(kAuthService.getKakaoUser(accessToken));
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
     }
 

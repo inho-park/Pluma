@@ -24,11 +24,11 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenProvider tokenProvider;
-    private final RedisService redisService;
+    final private AuthenticationManagerBuilder authenticationManagerBuilder;
+    final private MemberRepository memberRepository;
+    final private PasswordEncoder passwordEncoder;
+    final private TokenProvider tokenProvider;
+    final private RedisService redisService;
 
     @Transactional
     public MemberResponseDTO signup(MemberRequestDTO memberRequestDTO) {
