@@ -11,6 +11,7 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -25,12 +26,13 @@ import java.util.Optional;
 public class KAuthService {
     final private MemberRepository memberRepository;
     final private AuthService authService;
+    final private PasswordEncoder passwordEncoder;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    private String clientId;
+    private String CLIENT_ID;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    private String redirectUri;
+    private String REDIRECT_URI;
     @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    private String clientSecret;
+    private String CLIENT_SECRET;
 
     public String getToken(String code) {
         String accessToken = "";
@@ -42,9 +44,9 @@ public class KAuthService {
             httpURLConnection.setDoOutput(true);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(httpURLConnection.getOutputStream()));
             String query = "grant_type=authorization_code" +
-                    "&client_id=" + clientId +
-                    "&client_secret=" + clientSecret +
-                    "&redirect_uri=" + redirectUri +
+                    "&client_id=" + CLIENT_ID +
+                    "&client_secret=" + CLIENT_SECRET +
+                    "&redirect_uri=" + REDIRECT_URI +
                     "&code=" + code;
             bw.write(query);
             bw.flush();
@@ -108,29 +110,34 @@ public class KAuthService {
             Optional<Member> optionalUser = memberRepository.findByUsername(email);
 
             if(optionalUser.isEmpty()) {
-                member = Member.builder()
+                member = memberRepository.save(Member.builder()
                         .name(name)
                         .username(email)
+                        .password(passwordEncoder.encode(providerId))
                         .provider(provider)
                         .providerId(providerId)
                         .authority(Authority.ROLE_USER)
-                        .build();
-                memberRepository.save(member);
+                        .build());
             } else {
                 member = optionalUser.get();
             }
 //            tokenDTO = tokenProvider.getTokens(member.getName(), member.getAuthority().name());
 //            redisService.setValues("RefreshToken : " + member.getUsername(), tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
 
-
+            TokenDTO tokenDTO = authService.login(MemberRequestDTO.builder()
+                    .username(member.getUsername())
+                    .name(member.getName())
+                    .password(providerId)
+                    .build()
+            );
+            log.info("[KAUTH Service getKakaoUser] access token : " + tokenDTO.getAccessToken() + ", refresh token : " + tokenDTO.getRefreshToken());
+            return tokenDTO;
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return authService.login(MemberRequestDTO.builder()
-                .username(member.getUsername())
-                .name(member.getName())
-                .password(null)
-                .build()
-        );
+
+        return null;
     }
 }
