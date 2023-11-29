@@ -113,6 +113,8 @@ public class KAuthService {
                 member = memberRepository.save(Member.builder()
                         .name(name)
                         .username(email)
+                        // 임시 방편으로 현재 password 를 임의로 부여하여 로그인시킨 상태
+                        // => password 없이 로그인 로직을 강제할 수 있는 기능 필요
                         .password(passwordEncoder.encode(providerId))
                         .provider(provider)
                         .providerId(providerId)
@@ -121,9 +123,7 @@ public class KAuthService {
             } else {
                 member = optionalUser.get();
             }
-//            tokenDTO = tokenProvider.getTokens(member.getName(), member.getAuthority().name());
-//            redisService.setValues("RefreshToken : " + member.getUsername(), tokenDTO.getRefreshToken(), Duration.ofMillis(1000 * 60 * 60 * 24 * 14L));
-
+            
             TokenDTO tokenDTO = authService.login(MemberRequestDTO.builder()
                     .username(member.getUsername())
                     .name(member.getName())
