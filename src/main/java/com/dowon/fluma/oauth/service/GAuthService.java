@@ -81,8 +81,8 @@ public class GAuthService {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(response.getBody());
 
-        Long id = element.getAsJsonObject().get("id").getAsLong();
-        String name = element.getAsJsonObject().get("nickname").getAsString();
+        String id = element.getAsJsonObject().get("id").getAsString();
+        String name = element.getAsJsonObject().get("name").getAsString();
         String email = element.getAsJsonObject().get("email").getAsString();
         String provider = "google";
         String providerId = provider + "-" + id;
