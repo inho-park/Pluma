@@ -76,7 +76,7 @@ public class KAuthService {
         return accessToken;
     }
 
-    public TokenDTO getKakaoUser(String accessToken) throws MalformedURLException{
+    public TokenDTO getKakaoUserInfo(String accessToken) throws MalformedURLException{
         String requestURL = "https://kapi.kakao.com/v2/user/me";
         Member member = null;
         try {
