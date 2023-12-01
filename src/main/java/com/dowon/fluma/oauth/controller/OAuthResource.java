@@ -45,9 +45,7 @@ public class OAuthResource {
     public ResponseEntity naverCallback(@RequestParam String code, @RequestParam String state) {
         try {
             String accessToken = nAuthService.getToken(code, state);
-            nAuthService.getNaverUserInfo(accessToken);
-//            return ResponseEntity.ok().body(nAuthService.getNaverUserInfo(accessToken));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(nAuthService.getNaverUserInfo(accessToken));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

@@ -50,7 +50,7 @@ public class OAuthService {
         return authService.login(MemberRequestDTO.builder()
                 .username(member.getUsername())
                 .name(member.getName())
-                .password(providerId)
+                .password("oauth client")
                 .build()
         );
     }
