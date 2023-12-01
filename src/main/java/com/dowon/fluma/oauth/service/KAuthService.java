@@ -24,9 +24,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class KAuthService {
-    final private MemberRepository memberRepository;
-    final private AuthService authService;
-    final private PasswordEncoder passwordEncoder;
+    final private OAuthService oAuthService;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String CLIENT_ID;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -76,9 +74,8 @@ public class KAuthService {
         return accessToken;
     }
 
-    public TokenDTO getKakaoUserInfo(String accessToken) throws MalformedURLException{
+    public TokenDTO getKakaoUserInfo(String accessToken) throws MalformedURLException {
         String requestURL = "https://kapi.kakao.com/v2/user/me";
-        Member member = null;
         try {
             URL url = new URL(requestURL);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -92,10 +89,10 @@ public class KAuthService {
             BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
             String line;
             String result = "";
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 result += line;
             }
-            log.info("[KAUTH Service getKakaoUser] response body : " + result);
+            log.info("[KAUTH Service getKakaoUserInfo] response body : " + result);
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
@@ -105,35 +102,8 @@ public class KAuthService {
             String email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
             String provider = "kakao";
             String providerId = provider + "-" + id;
-            log.info("[KAUTH Service getKakaoUser] id : " + id + ", name : " + name + ", email : " + email);
-
-            Optional<Member> optionalUser = memberRepository.findByUsername(email);
-
-            if(optionalUser.isEmpty()) {
-                member = memberRepository.save(Member.builder()
-                        .name(name)
-                        .username(email)
-                        // 임시 방편으로 현재 password 를 임의로 부여하여 로그인시킨 상태
-                        // => password 없이 로그인 로직을 강제할 수 있는 기능 필요
-                        .password(passwordEncoder.encode(providerId))
-                        .provider(provider)
-                        .providerId(providerId)
-                        .authority(Authority.ROLE_USER)
-                        .build());
-            } else {
-                member = optionalUser.get();
-            }
-            
-            TokenDTO tokenDTO = authService.login(MemberRequestDTO.builder()
-                    .username(member.getUsername())
-                    .name(member.getName())
-                    .password(providerId)
-                    .build()
-            );
-            log.info("[KAUTH Service getKakaoUser] access token : " + tokenDTO.getAccessToken() + ", refresh token : " + tokenDTO.getRefreshToken());
-            return tokenDTO;
-        } catch (IOException e) {
-            e.printStackTrace();
+            log.info("[KAUTH Service getKakaoUserInfo] id : " + id + ", name : " + name + ", email : " + email);
+            return oAuthService.makeTokenDTO(name, email, provider, providerId);
         } catch (Exception e) {
             e.printStackTrace();
         }

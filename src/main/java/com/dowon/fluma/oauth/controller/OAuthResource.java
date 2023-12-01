@@ -2,6 +2,7 @@ package com.dowon.fluma.oauth.controller;
 
 import com.dowon.fluma.oauth.service.GAuthService;
 import com.dowon.fluma.oauth.service.KAuthService;
+import com.dowon.fluma.oauth.service.NAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 public class OAuthResource {
     final private KAuthService kAuthService;
     final private GAuthService gAuthService;
+    final private NAuthService nAuthService;
     @GetMapping("/kakao")
     public ResponseEntity kakaoCallback(@RequestParam String code) {
         try {
@@ -40,7 +42,15 @@ public class OAuthResource {
     }
 
     @GetMapping("/naver")
-    public ResponseEntity naverCallback(@RequestParam String code) {
-        return null;
+    public ResponseEntity naverCallback(@RequestParam String code, @RequestParam String state) {
+        try {
+            String accessToken = nAuthService.getToken(code, state);
+            nAuthService.getNaverUserInfo(accessToken);
+//            return ResponseEntity.ok().body(nAuthService.getNaverUserInfo(accessToken));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

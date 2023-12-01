@@ -12,7 +12,7 @@ import com.dowon.fluma.document.domain.Drawing;
 import com.dowon.fluma.document.dto.DocumentDTO;
 import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
-import com.dowon.fluma.document.exception.NoSuchDocumentException;
+import com.dowon.fluma.document.exception.CustomNoSuchDocumentException;
 import com.dowon.fluma.document.repository.DocumentRepository;
 import com.dowon.fluma.document.repository.DrawingRepository;
 import com.dowon.fluma.user.domain.Member;
@@ -59,7 +59,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO getDocument(Long documentId) {
-        Document document = documentRepository.findById(documentId).orElseThrow(NoSuchDocumentException::new);
+        Document document = documentRepository.findById(documentId).orElseThrow(CustomNoSuchDocumentException::new);
         DocumentDTO dto = entityToDTO(document, document.getUser());
         String fileName = "";
         Optional<Drawing> option = drawingRepository.findByDocument_Id(documentId);

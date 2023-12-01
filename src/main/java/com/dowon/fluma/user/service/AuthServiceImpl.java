@@ -7,6 +7,7 @@ import com.dowon.fluma.user.dto.MemberResponseDTO;
 import com.dowon.fluma.user.dto.TokenDTO;
 import com.dowon.fluma.user.dto.TokenRequestDTO;
 import com.dowon.fluma.common.jwt.TokenProvider;
+import com.dowon.fluma.user.exception.CustomNoProviderException;
 import com.dowon.fluma.user.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public TokenDTO login(MemberRequestDTO memberRequestDTO) {
+        if (memberRepository.findByUsername(memberRequestDTO.getUsername()).orElseThrow().getProvider() == null)
+            throw new CustomNoProviderException("OAuth로 로그인한 계정입니다");
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDTO.toAuthentication();
 
