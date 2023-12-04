@@ -62,8 +62,8 @@ public class GAuthService {
 
     public TokenDTO getGoogleUserInfo(String accessToken) {
         String userInfoRequestURL = "https://www.googleapis.com/oauth2/v1/userinfo";
-        HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);

@@ -9,7 +9,6 @@ import com.dowon.fluma.user.service.AuthService;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,14 @@ public class OAuthService {
     final private MemberRepository memberRepository;
     final private PasswordEncoder passwordEncoder;
     final private AuthService authService;
-    public JsonElement getTokenResponse(String url, String accessToken) {
 
+    /**
+     * 내가 원하는 json 객체의 회원 정보만을 가져와도 변수 명이 달라 추상화 불가능
+     * @param url
+     * @param accessToken
+     * @return
+     */
+    public JsonElement getTokenResponse(String url, String accessToken) {
         return null;
     }
 

@@ -1,10 +1,7 @@
 package com.dowon.fluma.oauth.service;
 
-import com.dowon.fluma.user.domain.Authority;
 import com.dowon.fluma.user.domain.Member;
-import com.dowon.fluma.user.dto.MemberRequestDTO;
 import com.dowon.fluma.user.dto.TokenDTO;
-import com.dowon.fluma.user.repository.MemberRepository;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Log4j2
 @Service
