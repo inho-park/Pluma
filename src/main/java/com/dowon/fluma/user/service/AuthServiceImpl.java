@@ -43,8 +43,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public TokenDTO login(MemberRequestDTO memberRequestDTO) {
-        if (memberRepository.findByUsername(memberRequestDTO.getUsername()).orElseThrow().getProvider() == null)
-            throw new CustomNoProviderException("OAuth로 로그인한 계정입니다");
+//        if (memberRepository.findByUsername(memberRequestDTO.getUsername()).orElseThrow().getProvider() == null)
+//            throw new CustomNoProviderException("OAuth로 로그인한 계정입니다");
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDTO.toAuthentication();
 

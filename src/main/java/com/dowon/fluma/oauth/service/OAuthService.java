@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.URL;
 import java.util.Optional;
 
 @Log4j2
