@@ -29,7 +29,7 @@ public class Member {
     @Column
     private String password;
 
-    @Column(unique = false, nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String name;
 
     @Column

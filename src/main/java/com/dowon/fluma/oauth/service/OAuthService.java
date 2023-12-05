@@ -37,11 +37,10 @@ public class OAuthService {
         Optional<Member> optionalUser = memberRepository.findByUsernameAndProviderId(email, providerId);
 
         if(optionalUser.isEmpty()) {
+            // provider 와 providerId 컬럼을 없애고 username 에 두 정보를 합치는 방식으로 가고자함
             member = memberRepository.save(Member.builder()
                     .name(name)
                     .username(email)
-                    // 임시 방편으로 현재 password 를 임의로 부여하여 로그인시킨 상태
-                    // => password 없이 로그인 로직을 강제할 수 있는 기능 필요
                     .password(passwordEncoder.encode("oauth client"))
                     .provider(provider)
                     .providerId(providerId)
