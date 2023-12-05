@@ -77,9 +77,8 @@ public class NAuthService {
         String name = element.getAsJsonObject().get("name").getAsString();
         String email = element.getAsJsonObject().get("email").getAsString();
         String provider = "naver";
-        String providerId = provider + "-" + id;
         log.info("[NAUTH Service getNaverUserInfo] id : " + id + ", name : " + name + ", email : " + email);
 
-        return oAuthService.makeTokenDTO(name, email, provider, providerId);
+        return oAuthService.makeTokenDTO(name, email, provider, id);
     }
 }

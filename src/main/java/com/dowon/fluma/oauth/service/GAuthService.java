@@ -75,10 +75,9 @@ public class GAuthService {
         String name = element.getAsJsonObject().get("name").getAsString();
         String email = element.getAsJsonObject().get("email").getAsString();
         String provider = "google";
-        String providerId = provider + "-" + id;
         log.info("[GAUTH Service getKakaoUser] id : " + id + ", name : " + name + ", email : " + email);
 
 
-        return oAuthService.makeTokenDTO(name, email, provider, providerId);
+        return oAuthService.makeTokenDTO(name, email, provider, id);
     }
 }

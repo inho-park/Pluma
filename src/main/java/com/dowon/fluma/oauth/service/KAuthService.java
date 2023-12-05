@@ -97,13 +97,12 @@ public class KAuthService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            Long id = element.getAsJsonObject().get("id").getAsLong();
+            String id = element.getAsJsonObject().get("id").getAsString();
             String name = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
             String email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
             String provider = "kakao";
-            String providerId = provider + "-" + id;
             log.info("[KAUTH Service getKakaoUserInfo] id : " + id + ", name : " + name + ", email : " + email);
-            return oAuthService.makeTokenDTO(name, email, provider, providerId);
+            return oAuthService.makeTokenDTO(name, email, provider, id);
         } catch (Exception e) {
             e.printStackTrace();
         }

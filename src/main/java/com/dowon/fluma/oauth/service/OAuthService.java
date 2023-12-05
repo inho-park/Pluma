@@ -32,8 +32,9 @@ public class OAuthService {
         return null;
     }
 
-    public TokenDTO makeTokenDTO(String name, String email,String provider, String providerId) {
+    public TokenDTO makeTokenDTO(String name, String email, String provider, String providerId) {
         Member member = null;
+        email += " " + provider;
         Optional<Member> optionalUser = memberRepository.findByUsernameAndProviderId(email, providerId);
 
         if(optionalUser.isEmpty()) {
