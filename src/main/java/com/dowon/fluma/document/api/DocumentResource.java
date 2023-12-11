@@ -47,7 +47,7 @@ public class DocumentResource {
     public ResponseEntity read(@PathVariable(value = "id") String documentId) {
         try {
             return new ResponseEntity<>(documentService.getDocument(Long.parseLong(documentId)), HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -62,7 +62,7 @@ public class DocumentResource {
     public ResponseEntity getList(DocumentPageRequestDTO pageRequestDTO) {
         try {
             return new ResponseEntity<>(documentService.getDocuments(pageRequestDTO), HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -79,7 +79,7 @@ public class DocumentResource {
     public ResponseEntity modify(@PathVariable(value = "id") String id, @RequestBody DocumentModifyDTO dto) {
         try {
             return new ResponseEntity<>(documentService.updateDocument(Long.parseLong(id), dto), HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -118,6 +118,16 @@ public class DocumentResource {
             versionService.deleteAll(Long.parseLong(documentId));
             imageService.deleteImageByDocument(Long.parseLong(documentId));
             return new ResponseEntity<>(documentService.deleteDocument(Long.parseLong(documentId), Long.parseLong(userId)), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/trans/{korean}")
+    public ResponseEntity getEnglish(@PathVariable(value = "korean") String korean) {
+        try {
+            return new ResponseEntity(null, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
