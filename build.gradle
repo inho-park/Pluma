@@ -53,6 +53,9 @@ dependencies {
 
 	// AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Deep L
+	implementation 'com.deepl.api:deepl-java:1.4.0'
 }
 
 tasks.named('test') {
