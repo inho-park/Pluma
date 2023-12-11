@@ -5,6 +5,7 @@ import com.dowon.fluma.document.dto.DocumentModifyDTO;
 import com.dowon.fluma.document.dto.DocumentPageRequestDTO;
 import com.dowon.fluma.document.dto.FilePathDTO;
 import com.dowon.fluma.document.service.DocumentService;
+import com.dowon.fluma.document.service.PapagoService;
 import com.dowon.fluma.image.exception.CustomImageFormatError;
 import com.dowon.fluma.image.service.ImageService;
 import com.dowon.fluma.version.service.VersionService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Log4j2
@@ -26,6 +28,7 @@ public class DocumentResource {
     private final DocumentService documentService;
     private final VersionService versionService;
     private final ImageService imageService;
+//    private final PapagoService papagoService;
 
     /**
      * 문서 생성하기
@@ -127,7 +130,9 @@ public class DocumentResource {
     @GetMapping(value = "/trans/{korean}")
     public ResponseEntity getEnglish(@PathVariable(value = "korean") String korean) {
         try {
-            return new ResponseEntity(null, HttpStatus.OK);
+            Map<String, String> map = new HashMap<>();
+//            map.put("eng", papagoService.translateEngToKor(korean));
+            return new ResponseEntity(map, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
